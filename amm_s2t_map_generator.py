@@ -236,7 +236,11 @@ for doc in documents:
 			src_data_type_length = '28'
 			src_data_type_precision = '0'
 		else:
-			(src_data_type,src_data_type_length) = src_full_data_type.split('(')
+			if src_full_data_type.find('(') > 0:
+				(src_data_type,src_data_type_length) = src_full_data_type.split('(')
+			else:
+				src_data_type = src_full_data_type
+				src_data_type_length = '0'
 			if src_data_type_length.find(',') >0:
 				(src_data_type_length,src_data_type_precision) = src_data_type_length.split(',')
 				src_data_type_precision = src_data_type_precision.strip(')')				
@@ -260,7 +264,12 @@ for doc in documents:
 			tgt_data_type_length = '28'
 			tgt_data_type_precision = '0'
 		else:
-			(tgt_data_type,tgt_data_type_length) = tgt_full_data_type.split('(')
+			if tgt_full_data_type.find('(') >0:
+				(tgt_data_type,tgt_data_type_length) = tgt_full_data_type.split('(')
+			else:
+				tgt_data_type = tgt_full_data_type
+				tgt_data_type_length = '0'
+			
 			if tgt_data_type_length.find(',') >0:
 				(tgt_data_type_length,tgt_data_type_precision) = tgt_data_type_length.split(',')
 				tgt_data_type_precision = tgt_data_type_precision.strip(')')
