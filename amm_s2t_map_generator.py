@@ -29,16 +29,19 @@ def Write_Overview(file_handle,mapping_name,description):
 	file_handle.write('<map:Overview>\n')
 	file_handle.write('<map:SpecificationName>'+mapping_name + '</map:SpecificationName>\n')
 	file_handle.write('<map:MapSpecVersion>1</map:MapSpecVersion>\n')
-	file_handle.write('<map:VersionLabel> </map:VersionLabel>\n')
+	file_handle.write('<map:VersionLabel xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"/>\n')
 	file_handle.write('<map:JobNameXRef xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"/>\n')
-	file_handle.write('<map:MappingDescription>'+ description +'</map:MappingDescription>\n')
+	if description == '':
+		file_handle.write('<map:MappingDescription xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"/>\n')
+	else:
+		file_handle.write('<map:MappingDescription>'+ description +'</map:MappingDescription>\n')
 	file_handle.write('<map:CreatedBy>Administrator</map:CreatedBy>\n')
 	file_handle.write('<map:CreatedDateTime>2014-05-15 11:06:45.188</map:CreatedDateTime>\n')
 	file_handle.write('<map:ModifiedBy>Administrator</map:ModifiedBy>\n')
 	file_handle.write('<map:ModifiedDateTime>2014-05-15 15:21:32.336</map:ModifiedDateTime>\n')
 	file_handle.write('</map:Overview>\n')
 def Write_SQLExtract(file_handle):
-	file_handle.write('<map:SourceExtractSql><map:SQLQuery xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"/>\n')
+	file_handle.write('<map:SourceExtractSql>\n<map:SQLQuery xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"/>\n')
 	file_handle.write('<map:SQLQueryDesc xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"/>\n')
 	file_handle.write('</map:SourceExtractSql>\n')
 def Write_TargetUpdateSrategy(file_handle):
@@ -196,7 +199,7 @@ for doc in documents:
 	subset_df = df.loc[(df.TABLE_NAME ==doc),]
 	file_handle = create_file(filename)
 	Write_XSD(file_handle)
-	Write_Overview(file_handle,args.basedocname+doc,'This is for a hub')
+	Write_Overview(file_handle,args.basedocname+doc,'')
 	Write_SQLExtract(file_handle)
 	Write_TargetUpdateSrategy(file_handle)
 	Write_TestingNotes(file_handle)
@@ -238,6 +241,11 @@ for doc in documents:
 		else:
 			if src_full_data_type.find('(') > 0:
 				(src_data_type,src_data_type_length) = src_full_data_type.split('(')
+				if src_data_type == 'SYSTEM_GENERATED':
+					src_data_type = 'NUMBER'
+					src_data_type_length = '0'
+				
+					
 			else:
 				src_data_type = src_full_data_type
 				src_data_type_length = '0'
